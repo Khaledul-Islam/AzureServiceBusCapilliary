@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureServiceBusCapilliary", "AzureServiceBusCapilliary\AzureServiceBusCapilliary.csproj", "{F35CE8E6-3389-4B77-863D-4ABA5FB9A0B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIK.DAL", "FIK.DAL\FIK.DAL.csproj", "{CCED84B6-DCED-4495-9A41-EF67FBA13E55}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F35CE8E6-3389-4B77-863D-4ABA5FB9A0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35CE8E6-3389-4B77-863D-4ABA5FB9A0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35CE8E6-3389-4B77-863D-4ABA5FB9A0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35CE8E6-3389-4B77-863D-4ABA5FB9A0B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCED84B6-DCED-4495-9A41-EF67FBA13E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCED84B6-DCED-4495-9A41-EF67FBA13E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCED84B6-DCED-4495-9A41-EF67FBA13E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCED84B6-DCED-4495-9A41-EF67FBA13E55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC6BD101-1618-4B3E-9A2C-6C236BC709F8}
+	EndGlobalSection
+EndGlobal
