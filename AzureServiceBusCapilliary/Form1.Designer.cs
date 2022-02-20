@@ -35,6 +35,7 @@ namespace AzureServiceBusCapilliary
             this.button1 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
+            this.lblDb = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // imageList1
@@ -72,11 +73,20 @@ namespace AzureServiceBusCapilliary
             this.label1.TabIndex = 1;
             this.label1.Text = "Apex <MSDSL> Capillary Azure Sync";
             // 
+            // lblDb
+            // 
+            this.lblDb.AutoSize = true;
+            this.lblDb.Location = new System.Drawing.Point(12, 426);
+            this.lblDb.Name = "lblDb";
+            this.lblDb.Size = new System.Drawing.Size(0, 15);
+            this.lblDb.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblDb);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -94,6 +104,7 @@ namespace AzureServiceBusCapilliary
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblDb;
     }
 }
 

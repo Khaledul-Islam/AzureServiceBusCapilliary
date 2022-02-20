@@ -53,7 +53,7 @@ namespace AzureServiceBusCapilliary
                 var jsonString = Encoding.UTF8.GetString(message.Body);
                 var json = JsonConvert.DeserializeObject<OrderResponse>(jsonString);
                 var response = repo.OrderManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, json.data.orderId);
+                repo.LogManager(jsonString, errMsg, response, "Order ID " + json.data.orderId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
@@ -89,7 +89,7 @@ namespace AzureServiceBusCapilliary
                 var jsonString = Encoding.UTF8.GetString(message.Body);
                 var json = JsonConvert.DeserializeObject<ProductResponse>(jsonString);
                 var response = repo.ProductManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, json.newData.productId);
+                repo.LogManager(jsonString, errMsg, response, "Product ID " + json.newData.productId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace AzureServiceBusCapilliary
                 var ss = JsonConvert.SerializeObject(obj.data);
                 var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
                 var response = repo.ReturnManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, json.returnRequest.orderId);
+                repo.LogManager(jsonString, errMsg, response, "Return Order ID " + json.returnRequest.orderId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
@@ -149,16 +149,29 @@ namespace AzureServiceBusCapilliary
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _ = Task.Run(() => OrderManagement());
-            _ = Task.Run(() => ProductManagement());
-            _ = Task.Run(() => ReturnManagement());
+            if (repo.ConnCheck())
+            {
+                _ = Task.Run(() => OrderManagement());
+                _ = Task.Run(() => ProductManagement());
+                _ = Task.Run(() => ReturnManagement());
+            }
+            else
+            {
+                MessageBox.Show("Database Connection Error");
+                lblDb.Text = "Database Connection Error";
+;            }
+           
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            orderClient.CloseAsync();
-            productClient.CloseAsync();
-            returnClient.CloseAsync();
+            if (string.IsNullOrEmpty(lblDb.Text))
+            {
+                orderClient.CloseAsync();
+                productClient.CloseAsync();
+                returnClient.CloseAsync();
+            }
+           
         }
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -172,7 +185,5 @@ namespace AzureServiceBusCapilliary
             notifyIcon1.Visible = true;
             notifyIcon1.ShowBalloonTip(1000);
         }
-
-        
     }
 }

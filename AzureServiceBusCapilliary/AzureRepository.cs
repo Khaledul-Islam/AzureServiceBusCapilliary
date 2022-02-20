@@ -1,9 +1,11 @@
 ﻿using AzureServiceBusCapilliary.Entities;
 using AzureServiceBusCapilliary.Providers;
 using AzureServiceBusCapilliary.QResponse;
+using AzureServiceBusCapilliary.Utilities;
 using FIK.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace AzureServiceBusCapilliary
@@ -141,8 +143,6 @@ namespace AzureServiceBusCapilliary
             try
             {
                 errMsg = string.Empty;
-                Product product = new Product();
-                product.IsEc = true;
                 List<string> sqlList = new List<string>();
                 if (!string.IsNullOrEmpty(response.newData.variantSKU))
                 {
@@ -180,7 +180,7 @@ namespace AzureServiceBusCapilliary
             {
                 foreach (var item in response.returnRequest.returnRequestDetails)
                 {
-                    sqlList.Add("Update EC_OrderLine set ReturnStatus='R' where OrderId='" + orderId + "' and VariantSku='"+item.variantSKU+"'");
+                    sqlList.Add("Update EC_OrderLine set ReturnStatus='R' where OrderId='" + orderId + "' and VariantSku='" + item.variantSKU + "'");
                 }
                 bool resp = _dal.ExecuteQuery(sqlList, ref msg);
                 if (resp == false || !string.IsNullOrEmpty(msg))
@@ -231,6 +231,26 @@ namespace AzureServiceBusCapilliary
             {
 
             }
+        }
+        #endregion
+
+        #region DBCheck
+        public bool ConnCheck()
+        {
+            using (var l_oConnection = new SqlConnection(StaticDetails.ConnectionString))
+            {
+                try
+                {
+                    l_oConnection.Open();
+                    return true;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+            // var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg).Count;
+            // return response > 0 ? true : false;
         }
         #endregion
     }
