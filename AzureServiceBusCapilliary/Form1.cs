@@ -42,7 +42,7 @@ namespace AzureServiceBusCapilliary
             }
             catch (Exception ex)
             {
-                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Order");
+                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Order","NotReceive");
             }
         }
 
@@ -53,13 +53,13 @@ namespace AzureServiceBusCapilliary
                 var jsonString = Encoding.UTF8.GetString(message.Body);
                 var json = JsonConvert.DeserializeObject<OrderResponse>(jsonString);
                 var response = repo.OrderManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, "Order ID " + json.data.orderId);
+                repo.LogManager(jsonString, errMsg, response, "OrderID:" + json.data.orderId, json.data.orderId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
             {
                 var jsonString = Encoding.UTF8.GetString(message.Body);
-                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Order");
+                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Order", "Receive");
             }
         }
         #endregion
@@ -79,7 +79,7 @@ namespace AzureServiceBusCapilliary
             }
             catch (Exception ex)
             {
-                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Product");
+                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Product", "NotReceive");
             }
         }
         async Task ReceiveProductAsync(Microsoft.Azure.ServiceBus.Message message, CancellationToken token)
@@ -89,13 +89,13 @@ namespace AzureServiceBusCapilliary
                 var jsonString = Encoding.UTF8.GetString(message.Body);
                 var json = JsonConvert.DeserializeObject<ProductResponse>(jsonString);
                 var response = repo.ProductManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, "Product ID " + json.newData.productId);
+                repo.LogManager(jsonString, errMsg, response, "ProductID:" + json.newData.productId, json.newData.productId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
             {
                 var jsonString = Encoding.UTF8.GetString(message.Body);
-                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Product");
+                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Product", "Receive");
             }
         }
         #endregion
@@ -116,7 +116,7 @@ namespace AzureServiceBusCapilliary
             }
             catch (Exception ex)
             {
-                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Return");
+                repo.LogManager(ex.StackTrace, ex.Message, false, "Exception from Return", "NotReceive");
             }
         }
 
@@ -130,13 +130,13 @@ namespace AzureServiceBusCapilliary
                 var ss = JsonConvert.SerializeObject(obj.data);
                 var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
                 var response = repo.ReturnManager(json, out string errMsg);
-                repo.LogManager(jsonString, errMsg, response, "Return Order ID " + json.returnRequest.orderId);
+                repo.LogManager(jsonString, errMsg, response, "ReturnOrder ID:" + json.returnRequest.orderId, json.returnRequest.orderId);
                 await orderClient.CompleteAsync(message.SystemProperties.LockToken);
             }
             catch (Exception ex)
             {
                 var jsonString = Encoding.UTF8.GetString(message.Body);
-                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Return");
+                repo.LogManager(jsonString, ex.Message + ex.StackTrace, false, "Exception from Return", "Receive");
             }
         }
         #endregion
@@ -151,6 +151,7 @@ namespace AzureServiceBusCapilliary
         {
             if (repo.ConnCheck())
             {
+               // repo.ExceptionRestore();
                 _ = Task.Run(() => OrderManagement());
                 _ = Task.Run(() => ProductManagement());
                 _ = Task.Run(() => ReturnManagement());
@@ -159,8 +160,8 @@ namespace AzureServiceBusCapilliary
             {
                 MessageBox.Show("Database Connection Error");
                 lblDb.Text = "Database Connection Error";
-;            }
-           
+            }
+
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -171,7 +172,7 @@ namespace AzureServiceBusCapilliary
                 productClient.CloseAsync();
                 returnClient.CloseAsync();
             }
-           
+
         }
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {

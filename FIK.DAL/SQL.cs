@@ -11,11 +11,13 @@ namespace FIK.DAL
 {
     public class SQL
     {
-        private SqlConnection connection;
+        //private SqlConnection connection;
+        private string connectionString;
 
-        public SQL(string connectionString)
+        public SQL(string _connectionString)
         {
-            connection = new SqlConnection(connectionString);
+            //connection = new SqlConnection(connectionString);
+            connectionString = _connectionString;
         }
 
         /// <summary>
@@ -31,19 +33,21 @@ namespace FIK.DAL
             bool result = false;
             SqlTransaction oTransaction = null;
             SqlCommand oCmd = null;
+            SqlConnection connection1 = new SqlConnection(connectionString);
 
             string errorQuery = "";
             try
             {
 
-                if (connection != null)
+                if (connection1 != null)
                 {
-                    connection.Open();
-                    oTransaction = connection.BeginTransaction();
+
+                    connection1.Open();
+                    oTransaction = connection1.BeginTransaction();
                     foreach (string s in SQL)
                     {
                         errorQuery = s;
-                        oCmd = new SqlCommand(s, connection);
+                        oCmd = new SqlCommand(s, connection1);
                         oCmd.Transaction = oTransaction;
                         oCmd.ExecuteNonQuery();
                     }
@@ -59,7 +63,7 @@ namespace FIK.DAL
             }
             finally
             {
-                connection.Close();
+                connection1.Close();
             }
             return result;
         }
@@ -170,6 +174,7 @@ namespace FIK.DAL
 
             SqlTransaction oTransaction = null;
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
 
             try
             {
@@ -339,6 +344,7 @@ namespace FIK.DAL
 
             SqlTransaction oTransaction = null;
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
 
             try
             {
@@ -557,6 +563,7 @@ namespace FIK.DAL
 
             SqlTransaction oTransaction = null;
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
 
             try
             {
@@ -1062,6 +1069,7 @@ namespace FIK.DAL
 
             SqlTransaction oTransaction = null;
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
 
 
             string queryError = "";
@@ -1325,6 +1333,7 @@ namespace FIK.DAL
         {
             DataTable dataTable = null;
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
 
@@ -1440,6 +1449,7 @@ namespace FIK.DAL
         {
            
             SqlCommand oCmd = null;
+            SqlConnection connection = new SqlConnection(connectionString);
             string firstRecord = "";
             try
             {

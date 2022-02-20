@@ -3,6 +3,7 @@ using AzureServiceBusCapilliary.Providers;
 using AzureServiceBusCapilliary.QResponse;
 using AzureServiceBusCapilliary.Utilities;
 using FIK.DAL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -180,7 +181,7 @@ namespace AzureServiceBusCapilliary
             {
                 foreach (var item in response.returnRequest.returnRequestDetails)
                 {
-                    sqlList.Add("Update EC_OrderLine set ReturnStatus='R' where OrderId='" + orderId + "' and VariantSku='" + item.variantSKU + "'");
+                    sqlList.Add("Update EC_OrderLine set CancelQuantity='" + item.returnQty + "', ReturnStatus='" + response.returnRequest.requestStatus + "' where OrderId='" + orderId + "' and VariantSku='" + item.variantSKU + "'");
                 }
                 bool resp = _dal.ExecuteQuery(sqlList, ref msg);
                 if (resp == false || !string.IsNullOrEmpty(msg))
@@ -200,7 +201,7 @@ namespace AzureServiceBusCapilliary
         #endregion
 
         #region LogManager
-        public void LogManager(string JsonString, string errMsg, bool response, string ID)
+        public void LogManager(string JsonString, string errMsg, bool response, string FromWhere, string ID)
         {
             try
             {
@@ -208,21 +209,21 @@ namespace AzureServiceBusCapilliary
                 TransferLog tl = new TransferLog();
                 tl.Date = DateTime.Now;
                 tl.Type = "AzureServiceBus";
-                tl.Taskid = ID;
+                tl.Taskid = FromWhere;
                 if (!response)
                 {
                     tl.Message = JsonString;
                     tl.Status = "FAILED";
-                    tl.MessageCode = "0000";
-                    tl.ErrorCode = "0000";
+                    tl.MessageCode = ID;
+                    tl.ErrorCode = ID;
                     tl.Reason = errMsg;
                 }
                 if (response)
                 {
-                    tl.Message = "ID :- " + ID + " has been saved successfully";
+                    tl.Message = "ID :- " + FromWhere + " has been saved successfully";
                     tl.Status = "SUCCESSED";
-                    tl.MessageCode = "1111";
-                    tl.ErrorCode = "1111";
+                    tl.MessageCode = ID;
+                    tl.ErrorCode = ID;
                     tl.Reason = "";
                 }
                 _dal.Insert<TransferLog>(tl, "", "", "EcDataTransferLog", ref msg);
@@ -237,20 +238,61 @@ namespace AzureServiceBusCapilliary
         #region DBCheck
         public bool ConnCheck()
         {
-            using (var l_oConnection = new SqlConnection(StaticDetails.ConnectionString))
+
+            try
             {
-                try
+                var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg).Count;
+                if (response > 0)
                 {
-                    l_oConnection.Open();
                     return true;
                 }
-                catch (SqlException)
+                else
                 {
                     return false;
                 }
+
+            }
+            catch (SqlException)
+            {
+                return false;
             }
             // var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg).Count;
             // return response > 0 ? true : false;
+        }
+        #endregion
+
+        #region ExceptionRestore
+        public bool ExceptionRestore()
+        {
+            string query = "SELECT  [Taskid],[Message],[Status] FROM [POS_MASTER_DB_SRV].[dbo].[EcDataTransferLog] where Status='FAILED'";
+            var response = _dal.Select<TransferLog>(query, ref msg);
+            if (response.Count > 0)
+            {
+                foreach (var item in response)
+                {
+                    //if (item.Taskid.Contains("Exception from Return"))
+                    //{
+                    //    dynamic obj = JsonConvert.DeserializeObject(item.Message);
+                    //    dynamic ss = JsonConvert.SerializeObject(obj.data);
+                    //    var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
+                    //    var status = ReturnManager(json, out string errMsg);
+                    //    if (status)
+                    //    {
+                    //        tt.Add("True");
+                    //    }
+                    //    else
+                    //    {
+                    //        ff.Add("False");
+                    //    }
+                    //}
+                    //if (item.Taskid.Contains("Exception from Order"))
+                    //{
+                    //    var json = JsonConvert.DeserializeObject<OrderResponse>(item.Message);
+                    //    var status = OrderManager(json, out string errMsg);
+                    //}
+                }
+            }
+            return false;
         }
         #endregion
     }
