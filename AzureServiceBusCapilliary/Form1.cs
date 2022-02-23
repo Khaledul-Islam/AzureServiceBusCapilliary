@@ -152,9 +152,9 @@ namespace AzureServiceBusCapilliary
             if (repo.ConnCheck())
             {
                // repo.ExceptionRestore();
-                _ = Task.Run(() => OrderManagement());
-                _ = Task.Run(() => ProductManagement());
-                _ = Task.Run(() => ReturnManagement());
+               // _ = Task.Run(() => OrderManagement());
+              //  _ = Task.Run(() => ProductManagement());
+               // _ = Task.Run(() => ReturnManagement());
             }
             else
             {
@@ -185,6 +185,12 @@ namespace AzureServiceBusCapilliary
             this.Hide();
             notifyIcon1.Visible = true;
             notifyIcon1.ShowBalloonTip(1000);
+        }
+
+        private void AddbuttonClick(object sender, EventArgs e)
+        {
+            JsonForm jForm = new JsonForm();
+            jForm.ShowDialog();
         }
     }
 }

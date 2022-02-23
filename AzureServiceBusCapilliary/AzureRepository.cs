@@ -23,57 +23,78 @@ namespace AzureServiceBusCapilliary
         {
             errMsg = string.Empty;
             CompositeModel composite = new CompositeModel();
-            Order model = new Order();
-            try
-            {
-                model.AmountPayable = Convert.ToDecimal(response.data.amountPayable);
-                model.ConversionFactor = Convert.ToInt32(response.data.conversionFactor);
-                model.DeliveryOption = response.data.deliveryOption;
-                model.IsGift = response.data.isGift;
-                model.MerchantId = response.data.merchantId;
-                model.OrderDate = response.data.orderDate;
-                model.OrderId = Convert.ToInt64(response.data.orderId);
-                orderId = model.OrderId;
-                model.OriginalOrderId = string.IsNullOrEmpty(response.data.originalOrderId) ? 0 : Convert.ToInt64(response.data.originalOrderId);
-
-                model.orderLine = orderLine(response.data.orderLineId);
-                model.paymentDetails = paymentDetails(response.data.paymentDetails);
-
-                model.PickupMobile = response.data.pickupMobile;
-                model.PromotionDiscount = Convert.ToDecimal(response.data.promotionDiscount);
-                model.ReferenceNo = response.data.referenceNo;
-                model.RefundAmount = Convert.ToDecimal(response.data.refundAmount);
-                model.ReturnOrderId = string.IsNullOrEmpty(response.data.originalOrderId) ? 0 : Convert.ToInt64(response.data.returnOrderId);
-                model.Rewards = Convert.ToString(response.data.rewards);
-                model.ShippingDiscount = Convert.ToDecimal(response.data.shippingDiscount);
-                model.ShippingMode = response.data.shippingMode;
-                model.Status = response.data.status;
-                model.TaxTotal = response.data.taxTotal;
-                model.TotalAmount = Convert.ToDecimal(response.data.totalAmount);
-                model.VoucherCode = response.data.voucherCode;
-                model.VoucherDiscount = Convert.ToDecimal(response.data.voucherDiscount);
-
-                model.Mobile = response.data.billingAddress.mobile;
-                model.Address = response.data.billingAddress.address1 + response.data.billingAddress.address2;
-                model.Name = response.data.billingAddress.firstname + response.data.billingAddress.lastname;
-                model.Email = response.data.billingAddress.email;
-
-                composite.AddRecordSet<OrderLine>(model.orderLine, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_OrderLine");
-                composite.AddRecordSet<PaymentDetails>(model.paymentDetails, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_PaymentDetails");
-                composite.AddRecordSet<Order>(model, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_Order");
-                var res = _dal.InsertUpdateComposite(composite, ref msg);
-                if (!string.IsNullOrEmpty(msg))
+            //if (response.data.status == "A" || response.data.status == "D" || response.data.status == "C")
+            //{
+                Order model = new Order();
+                try
                 {
-                    errMsg = msg;
-                }
-                return res;
-            }
-            catch (Exception e)
-            {
+                    model.AmountPayable = Convert.ToDecimal(response.data.amountPayable);
+                    model.ConversionFactor = Convert.ToInt32(response.data.conversionFactor);
+                    model.DeliveryOption = response.data.deliveryOption;
+                    model.IsGift = response.data.isGift;
+                    model.MerchantId = response.data.merchantId;
+                    model.OrderDate = response.data.orderDate;
+                    model.OrderId = Convert.ToInt64(response.data.orderId);
+                    orderId = model.OrderId;
+                    model.OriginalOrderId = string.IsNullOrEmpty(response.data.originalOrderId) ? 0 : Convert.ToInt64(response.data.originalOrderId);
+                    model.PickupMobile = response.data.pickupMobile;
+                    model.PromotionDiscount = Convert.ToDecimal(response.data.promotionDiscount);
+                    model.ReferenceNo = response.data.referenceNo;
+                    model.RefundAmount = Convert.ToDecimal(response.data.refundAmount);
+                    model.ReturnOrderId = string.IsNullOrEmpty(response.data.returnOrderId) ? 0 : Convert.ToInt64(response.data.returnOrderId);
+                    model.Rewards = Convert.ToString(response.data.rewards);
+                    model.ShippingDiscount = Convert.ToDecimal(response.data.shippingDiscount);
+                    model.ShippingMode = response.data.shippingMode;
+                    model.Status = response.data.status;
+                    model.TaxTotal = response.data.taxTotal;
+                    model.TotalAmount = Convert.ToDecimal(response.data.totalAmount);
+                    model.VoucherCode = response.data.voucherCode;
+                    model.VoucherDiscount = Convert.ToDecimal(response.data.voucherDiscount);
+                    model.Mobile = response.data.billingAddress.mobile;
+                    model.Address = response.data.billingAddress.address1 + response.data.billingAddress.address2;
+                    model.Name = response.data.billingAddress.firstname + response.data.billingAddress.lastname;
+                    model.Email = response.data.billingAddress.email;
 
-                errMsg = e.Message;
-                return false;
-            }
+                    model.orderLine = orderLine(response.data.orderLineId);
+                    model.paymentDetails = paymentDetails(response.data.paymentDetails);
+
+                    //if (response.data.originalOrderId != null)
+                    //{
+                    //    List<OrderLine> orderPrv = _dal.Select<OrderLine>("select * from EC_OrderLine where OrderId='" + model.OriginalOrderId + "'", ref msg);
+                    //    foreach (var item in orderPrv)
+                    //    {
+                    //        item.CancelQuantity = item.Quantity;
+                    //        item.DerivedStatus = "Cancelled";
+                    //        item.DerivedStatusCode = "IC";
+                    //    }
+                    //    composite.AddRecordSet<OrderLine>(orderPrv, OperationMode.Update, "", "CancelQuantity,DerivedStatus,DerivedStatusCode", "OrderId", "EC_OrderLine");
+
+                    //}
+
+
+                    composite.AddRecordSet<OrderLine>(model.orderLine, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_OrderLine");
+                    composite.AddRecordSet<PaymentDetails>(model.paymentDetails, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_PaymentDetails");
+                    composite.AddRecordSet<Order>(model, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_Order");
+                    var res = _dal.InsertUpdateComposite(composite, ref msg);
+                    if (!string.IsNullOrEmpty(msg))
+                    {
+                        errMsg = msg;
+                    }
+                    return res;
+                }
+                catch (Exception e)
+                {
+
+                    errMsg = e.Message;
+                    return false;
+                }
+            //}
+            //else
+            //{
+            //    LogManager(JsonConvert.SerializeObject(response), "Order Status Not In Requirement", false, "OrderID:" + response.data.orderId, response.data.orderId);
+            //    return false;
+            //}
+
 
         }
         public List<OrderLine> orderLine(List<OrderLineId> lstItem)
@@ -241,18 +262,18 @@ namespace AzureServiceBusCapilliary
 
             try
             {
-                var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg).Count;
-                if (response > 0)
-                {
-                    return true;
-                }
-                else
+                var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg);
+                if (!string.IsNullOrEmpty(msg))
                 {
                     return false;
                 }
+                else
+                {
+                    return true;
+                }
 
             }
-            catch (SqlException)
+            catch (Exception e)
             {
                 return false;
             }
@@ -264,7 +285,7 @@ namespace AzureServiceBusCapilliary
         #region ExceptionRestore
         public bool ExceptionRestore()
         {
-            string query = "SELECT  [Taskid],[Message],[Status] FROM [POS_MASTER_DB_SRV].[dbo].[EcDataTransferLog] where Status='FAILED'";
+            string query = "SELECT  Taskid,Message,Status FROM EcDataTransferLog where Status='FAILED'";
             var response = _dal.Select<TransferLog>(query, ref msg);
             if (response.Count > 0)
             {
@@ -276,14 +297,6 @@ namespace AzureServiceBusCapilliary
                     //    dynamic ss = JsonConvert.SerializeObject(obj.data);
                     //    var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
                     //    var status = ReturnManager(json, out string errMsg);
-                    //    if (status)
-                    //    {
-                    //        tt.Add("True");
-                    //    }
-                    //    else
-                    //    {
-                    //        ff.Add("False");
-                    //    }
                     //}
                     //if (item.Taskid.Contains("Exception from Order"))
                     //{
