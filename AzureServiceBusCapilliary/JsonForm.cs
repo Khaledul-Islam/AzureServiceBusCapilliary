@@ -58,10 +58,20 @@ namespace AzureServiceBusCapilliary
             }
             if (JsontypeDDL.SelectedItem.ToString() == "ARTICLE")
             {
+                ProductResponse json = new ProductResponse();
                 try
                 {
                     var jsonString = JsonObjectTxtBox.Text;
-                    var json = JsonConvert.DeserializeObject<ProductResponse>(jsonString);
+                    try
+                    {
+                        json = JsonConvert.DeserializeObject<ProductResponse>(jsonString);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show("Invalid JSON Format." + ex.StackTrace.Substring(5, 45));
+                        return;
+                    }
                     var response = repo.ProductManager(json, out string errMsg);
                     repo.LogManager(jsonString, errMsg, response, "ProductID:" + json.newData.productId, json.newData.productId);
                 }
@@ -73,12 +83,22 @@ namespace AzureServiceBusCapilliary
             }
             if (JsontypeDDL.SelectedItem.ToString() == "RETURN")
             {
+                ReturnResponse json = new ReturnResponse();
                 try
                 {
                     var jsonString = JsonObjectTxtBox.Text;
                     dynamic obj = JsonConvert.DeserializeObject(jsonString);
                     var ss = JsonConvert.SerializeObject(obj.data);
-                    var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
+                    try
+                    {
+                        json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show("Invalid JSON Format." + ex.StackTrace.Substring(5, 45));
+                        return;
+                    }
                     var response = repo.ReturnManager(json, out string errMsg);
                     repo.LogManager(jsonString, errMsg, response, "ReturnOrder ID:" + json.returnRequest.orderId, json.returnRequest.orderId);
                 }

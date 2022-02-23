@@ -57,6 +57,7 @@ namespace AzureServiceBusCapilliary
             // 
             // JsontypeDDL
             // 
+            this.JsontypeDDL.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.JsontypeDDL.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.JsontypeDDL.FormattingEnabled = true;
             this.JsontypeDDL.Items.AddRange(new object[] {
