@@ -31,7 +31,7 @@ namespace AzureServiceBusCapilliary
                 MessageBox.Show("JSON Object can not be EMPTY");
                 return;
             }
-            if (JsontypeDDL.SelectedItem.ToString() == "ORDER")               
+            if (JsontypeDDL.SelectedItem.ToString() == "ORDER")
             {
                 OrderResponse json = new OrderResponse();
                 try
@@ -44,10 +44,19 @@ namespace AzureServiceBusCapilliary
                     catch (Exception ex)
                     {
 
-                        MessageBox.Show("Invalid JSON Format."+ ex.StackTrace.Substring(5,45));
+                        MessageBox.Show("Invalid JSON Format." + ex.StackTrace.Substring(5, 45));
                         return;
                     }
                     var response = repo.OrderManager(json, out string errMsg);
+                    if (response == true && string.IsNullOrEmpty(errMsg))
+                    {
+                        MessageBox.Show("Operation Successfull");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Response Invalid. See log for more details");
+                    }
+
                     repo.LogManager(jsonString, errMsg, response, "OrderID:" + json.data.orderId, json.data.orderId);
                 }
                 catch (Exception ex)
@@ -73,6 +82,14 @@ namespace AzureServiceBusCapilliary
                         return;
                     }
                     var response = repo.ProductManager(json, out string errMsg);
+                    if (response == true && string.IsNullOrEmpty(errMsg))
+                    {
+                        MessageBox.Show("Operation Successfull");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Response Invalid. See log for more details");
+                    }
                     repo.LogManager(jsonString, errMsg, response, "ProductID:" + json.newData.productId, json.newData.productId);
                 }
                 catch (Exception ex)
@@ -99,11 +116,18 @@ namespace AzureServiceBusCapilliary
                         return;
                     }
                     var response = repo.ReturnManager(json, out string errMsg);
+                    if (response == true && string.IsNullOrEmpty(errMsg))
+                    {
+                        MessageBox.Show("Operation Successfull");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Response Invalid. See log for more details");
+                    }
                     repo.LogManager(jsonString, errMsg, response, "ReturnOrder ID:" + json.returnRequest.orderId, json.returnRequest.orderId);
                 }
                 catch (Exception ex)
                 {
-
                     repo.LogManager(JsonObjectTxtBox.Text, ex.Message + ex.StackTrace, false, "Exception From Manual Return Insert", "JSONForm");
                 }
             }
@@ -113,7 +137,7 @@ namespace AzureServiceBusCapilliary
 
         private void CancelButtonClick_Click(object sender, EventArgs e)
         {
-            this.Close(); 
+            this.Close();
         }
 
         private void JsonForm_Load(object sender, EventArgs e)
