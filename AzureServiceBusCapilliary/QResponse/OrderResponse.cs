@@ -77,7 +77,7 @@ namespace AzureServiceBusCapilliary.QResponse
 
     public class OrderLineId
     {
-        public int totalVoucherDiscount { get; set; }
+        public decimal totalVoucherDiscount { get; set; }
         public string orderId { get; set; }
         public string customFields { get; set; }
         public string portion { get; set; }
@@ -86,24 +86,24 @@ namespace AzureServiceBusCapilliary.QResponse
         public string derivedStatusCode { get; set; }
         public object parentOrderlineId { get; set; }
         public string derivedStatus { get; set; }
-        public int totalPromotionDiscount { get; set; }
+        public decimal totalPromotionDiscount { get; set; }
         public string deliveryMode { get; set; }
         public string itemStatus { get; set; }
         public string variantProductId { get; set; }
         public string isPrimaryProduct { get; set; }
         public string VariantSku { get; set; }
         public string image { get; set; }
-        public int quantity { get; set; }
-        public int shippingCost { get; set; }
+        public decimal quantity { get; set; }
+        public decimal shippingCost { get; set; }
         public string productId { get; set; }
-        public int shippingVoucherDiscount { get; set; }
+        public decimal shippingVoucherDiscount { get; set; }
         public List<object> promotionIds { get; set; }
         public string ProductTitle { get; set; }
-        public int cancelQuantity { get; set; }
+        public decimal cancelQuantity { get; set; }
         public bool isParentProduct { get; set; }
         public bool isBackOrder { get; set; }
         public string orderLineId { get; set; }
-        public int totalTaxAmount { get; set; }
+        public decimal totalTaxAmount { get; set; }
         public string locationCode { get; set; }
         public string SKU { get; set; }
         public string BundleProductId { get; set; }
@@ -119,7 +119,7 @@ namespace AzureServiceBusCapilliary.QResponse
         public string orderId { get; set; }
         public string conversionFactor { get; set; }
         public string latitude { get; set; }
-        public int taxTotal { get; set; }
+        public decimal taxTotal { get; set; }
         public List<OrderAttribute> orderAttributes { get; set; }
         public double amountPayable { get; set; }
         public string leadTime { get; set; }

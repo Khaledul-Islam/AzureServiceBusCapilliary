@@ -104,7 +104,7 @@ namespace AzureServiceBusCapilliary
             {
                 OrderLine order = new OrderLine();
                 order.BundleProductId = Convert.ToInt64(item.BundleProductId);
-                order.CancelQuantity = item.cancelQuantity;
+                order.CancelQuantity =Convert.ToDecimal( item.cancelQuantity);
                 order.DeliveryMode = item.deliveryMode;
                 order.DerivedStatus = item.derivedStatus;
                 order.DerivedStatusCode = item.derivedStatusCode;
@@ -120,14 +120,14 @@ namespace AzureServiceBusCapilliary
                 order.ProductId = Convert.ToInt64(item.productId);
                 order.ProductPrice = Convert.ToDecimal(item.productPrice);
                 order.ProductTitle = item.ProductTitle;
-                order.Quantity = item.quantity;
-                order.ShippingCost = item.shippingCost;
-                order.ShippingVoucherDiscount = item.shippingVoucherDiscount;
+                order.Quantity = Convert.ToDecimal( item.quantity);
+                order.ShippingCost = Convert.ToDecimal( item.shippingCost);
+                order.ShippingVoucherDiscount = Convert.ToDecimal( item.shippingVoucherDiscount);
                 order.SKU = item.SKU;
                 order.StockAction = item.stockAction;
                 order.TotalPromotionDiscount = item.totalPromotionDiscount;
                 order.TotalTaxAmount = item.totalTaxAmount;
-                order.TotalVoucherDiscount = item.totalVoucherDiscount;
+                order.TotalVoucherDiscount =Convert.ToDecimal( item.totalVoucherDiscount);
                 order.VariantProductId = Convert.ToInt64(item.variantProductId);
                 order.VariantSku = item.VariantSku;
                 orderLine.Add(order);
@@ -279,33 +279,6 @@ namespace AzureServiceBusCapilliary
             }
             // var response = _dal.Select<Order>("select top(1) OrderId from EC_Order", ref msg).Count;
             // return response > 0 ? true : false;
-        }
-        #endregion
-
-        #region ExceptionRestore
-        public bool ExceptionRestore()
-        {
-            string query = "SELECT  Taskid,Message,Status FROM EcDataTransferLog where Status='FAILED'";
-            var response = _dal.Select<TransferLog>(query, ref msg);
-            if (response.Count > 0)
-            {
-                foreach (var item in response)
-                {
-                    //if (item.Taskid.Contains("Exception from Return"))
-                    //{
-                    //    dynamic obj = JsonConvert.DeserializeObject(item.Message);
-                    //    dynamic ss = JsonConvert.SerializeObject(obj.data);
-                    //    var json = JsonConvert.DeserializeObject<ReturnResponse>(ss);
-                    //    var status = ReturnManager(json, out string errMsg);
-                    //}
-                    //if (item.Taskid.Contains("Exception from Order"))
-                    //{
-                    //    var json = JsonConvert.DeserializeObject<OrderResponse>(item.Message);
-                    //    var status = OrderManager(json, out string errMsg);
-                    //}
-                }
-            }
-            return false;
         }
         #endregion
     }

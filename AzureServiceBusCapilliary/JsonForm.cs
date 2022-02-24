@@ -95,7 +95,6 @@ namespace AzureServiceBusCapilliary
                     }
                     catch (Exception ex)
                     {
-
                         MessageBox.Show("Invalid JSON Format." + ex.StackTrace.Substring(5, 45));
                         return;
                     }

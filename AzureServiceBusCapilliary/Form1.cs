@@ -151,10 +151,9 @@ namespace AzureServiceBusCapilliary
         {
             if (repo.ConnCheck())
             {
-               // repo.ExceptionRestore();
-               // _ = Task.Run(() => OrderManagement());
-              //  _ = Task.Run(() => ProductManagement());
-               // _ = Task.Run(() => ReturnManagement());
+                _ = Task.Run(() => OrderManagement());
+                _ = Task.Run(() => ProductManagement());
+                _ = Task.Run(() => ReturnManagement());
             }
             else
             {
