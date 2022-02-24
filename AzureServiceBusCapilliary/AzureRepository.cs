@@ -91,7 +91,7 @@ namespace AzureServiceBusCapilliary
             }
             else
             {
-                LogManager(JsonConvert.SerializeObject(response), "Order Status Not In Requirement", false, "OrderID:" + response.data.orderId, response.data.orderId);
+                errMsg = "Order Status Not In Requirement";
                 return false;
             }
 
