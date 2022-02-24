@@ -23,8 +23,8 @@ namespace AzureServiceBusCapilliary
         {
             errMsg = string.Empty;
             CompositeModel composite = new CompositeModel();
-            //if (response.data.status == "A" || response.data.status == "D" || response.data.status == "C")
-            //{
+            if (response.data.status == "A" || response.data.status == "D" || response.data.status == "C")
+            {
                 Order model = new Order();
                 try
                 {
@@ -88,12 +88,12 @@ namespace AzureServiceBusCapilliary
                     errMsg = e.Message;
                     return false;
                 }
-            //}
-            //else
-            //{
-            //    LogManager(JsonConvert.SerializeObject(response), "Order Status Not In Requirement", false, "OrderID:" + response.data.orderId, response.data.orderId);
-            //    return false;
-            //}
+            }
+            else
+            {
+                LogManager(JsonConvert.SerializeObject(response), "Order Status Not In Requirement", false, "OrderID:" + response.data.orderId, response.data.orderId);
+                return false;
+            }
 
 
         }
