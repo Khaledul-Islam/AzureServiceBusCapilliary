@@ -25,6 +25,15 @@ namespace AzureServiceBusCapilliary
             CompositeModel composite = new CompositeModel();
             if (response.data.status == "A" || response.data.status == "D" || response.data.status == "C")
             {
+                if(response.data.status == "C")
+                {
+                    var ISExist = _dal.SelectFirstOrDefault<Order>("select * from EC_Order where OrderId='" + response.data.orderId + "'", ref msg);
+                    if (ISExist == null)
+                    {
+                        errMsg = "This order data not exist in our system";
+                        return false;
+                    }
+                }
                 Order model = new Order();
                 try
                 {
@@ -72,9 +81,9 @@ namespace AzureServiceBusCapilliary
                     //}
 
 
-                    composite.AddRecordSet<OrderLine>(model.orderLine, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_OrderLine");
-                    composite.AddRecordSet<PaymentDetails>(model.paymentDetails, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_PaymentDetails");
                     composite.AddRecordSet<Order>(model, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_Order");
+                    composite.AddRecordSet<OrderLine>(model.orderLine, OperationMode.InsertOrUpdaet, "", "", "OrderId,VariantSku", "EC_OrderLine");
+                    composite.AddRecordSet<PaymentDetails>(model.paymentDetails, OperationMode.InsertOrUpdaet, "", "", "OrderId", "EC_PaymentDetails");
                     var res = _dal.InsertUpdateComposite(composite, ref msg);
                     if (!string.IsNullOrEmpty(msg))
                     {
@@ -91,7 +100,7 @@ namespace AzureServiceBusCapilliary
             }
             else
             {
-                errMsg = "Order Status Not In Requirement";
+                errMsg = "Skipped.Order Status Not In Requirement";
                 return false;
             }
 
@@ -241,7 +250,7 @@ namespace AzureServiceBusCapilliary
                 }
                 if (response)
                 {
-                    tl.Message = "ID :- " + FromWhere + " has been saved successfully";
+                    tl.Message = "ID :- " + FromWhere + " has been saved successfully."+ JsonString;
                     tl.Status = "SUCCESSED";
                     tl.MessageCode = ID;
                     tl.ErrorCode = ID;
