@@ -103,7 +103,7 @@ namespace AzureServiceBusCapilliary
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 15);
             this.label2.TabIndex = 4;
-            this.label2.Text = "V.1.02032022";
+            this.label2.Text = "V.1.16032022";
             // 
             // Form1
             // 

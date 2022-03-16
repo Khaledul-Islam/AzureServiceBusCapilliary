@@ -29,7 +29,7 @@ namespace AzureServiceBusCapilliary
                 string updateCol = @"OrderLineId,ParentOrderlineId,TotalVoucherDiscount,OrderId,Description,DerivedStatusCode,DerivedStatus,TotalPromotionDiscount,DeliveryMode,ItemStatus,VariantProductId,ProductId,IsPrimaryProduct,SKU,VariantSku,Quantity,ShippingCost,ShippingVoucherDiscount,ProductTitle,CancelQuantity,IsParentProduct,IsBackOrder,TotalTaxAmount,locationCode,BundleProductId,ProductPrice,StockAction,ReturnStatus,TransferStatus";
 
                 List<OrderLine> dbOrderLst = _dal.Select<OrderLine>("select * from EC_OrderLine where OrderId='" + response.data.orderId + "'", ref msg);
-                if (dbOrderLst != null)
+                if (dbOrderLst != null && dbOrderLst.Count > 0)
                 {
                     foreach (var dbOrder in dbOrderLst)
                     {
@@ -58,6 +58,16 @@ namespace AzureServiceBusCapilliary
                             Order model = PrepareData(response);
                             model.TransferStatus = "N";
                             compositeLine.AddRecordSet<OrderLine>(model, OperationMode.Update, "", updateCol, "OrderId,VariantSku", "EC_OrderLine");
+                            if (dbOrder.TransferStatus == "N")
+                            {
+                                dbOrder.TransferStatus = "Skip";
+                                compositeLine.AddRecordSet<OrderLine>(dbOrder, OperationMode.Insert, "", "", "OrderId,VariantSku", "EC_OrderLineHistory");
+                            }
+                            if (dbOrder.TransferStatus == "Y")
+                            {
+                                dbOrder.TransferStatus = "N";
+                                compositeLine.AddRecordSet<OrderLine>(dbOrder, OperationMode.Insert, "", "", "OrderId,VariantSku", "EC_OrderLineHistory");
+                            }
                         }
                     }
                     var lineResponse = _dal.InsertUpdateComposite(compositeLine, ref msg);
