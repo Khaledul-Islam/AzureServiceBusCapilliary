@@ -157,6 +157,10 @@ namespace AzureServiceBusCapilliary.QResponse
         public string channelID { get; set; }
         public string status { get; set; }
     }
+    public class ActionDetails
+    {
+        public string type { get; set; }
+    }
 
     public class ChangedAttributes
     {
@@ -168,5 +172,6 @@ namespace AzureServiceBusCapilliary.QResponse
     {
         public Data data { get; set; }
         public ChangedAttributes changedAttributes { get; set; }
+        public ActionDetails actionDetails { get; set; }
     }
 }

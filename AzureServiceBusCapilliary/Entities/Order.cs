@@ -67,6 +67,7 @@ namespace AzureServiceBusCapilliary.Entities
         public decimal ProductPrice { get; set; }
         public string StockAction { get; set; }
         public string ReturnStatus { get; set; }
+        public string TransferStatus { get; set; }
     }
     public class PaymentDetails
     {
